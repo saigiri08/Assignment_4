@@ -1,0 +1,94 @@
+---
+title: "Assignment2"
+author: "Sainath Giri"
+date: "2023-06-18"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Description, echo=TRUE}
+# Section 1: Description of the data.
+
+# The Dataset i am using is of alcohol consumption by each country in terms of Beers,spirit,wine served and total litres of pure alcohol consumed. This information was collected from the popular bars,pubs and liquor stores in each country.
+
+# The research questions i am hoping to use is what are the patterns and trends in alcohol consumption of each country and also the impact of alcohol on the public health? how alcohol consumption get influenced based on which factors.
+
+# The dataset file is in CSV format as it is the most suitable format for a dataset. If suppose the dataset is in flat file format then it could be either fixed width or delimiter.
+
+#If the dataset is in flat file format, it might be fixed-width or delimited, my dataset file  is a delimited as it contains delimiter comma i.e (",").
+
+#Generally Binary files can be opened using Propreitary softwares with specific binary formating features and also using programming languages like Python which has specialized libraries to open it.
+
+```
+
+```{r reading the dataset, echo=TRUE}
+# Section 2: Reading the data into R
+
+#To read the alcohol Consumption  data using the read.csv function present in readr package.
+
+
+cran_mirror <- "https://cran.r-project.org"
+
+# Set the CRAN mirror
+options(repos = cran_mirror)
+
+install.packages("readr")
+library(readr)
+install.packages("dplyr")
+library(dplyr)
+install.packages("knitr")
+library(knitr)
+
+# Reading the alcohol Consumption data
+
+AC <- readr::read_csv("C:/Users/91738/Downloads/drinks.csv" , show_col_types = FALSE)
+
+#here in this step, I first installed the readr,dplyr,knitr packages. After that i read the drinks.csv file into object AC using the read_csv function.
+
+
+#here we can use special options like skip to skip the row of the file from reading which are not necessary for example row containing header names which are not required. if we dont give this special option it will read the values with default delimiter i.e (",").
+```
+
+```{r Clean the data, echo=TRUE}
+#Section 3 : Clean the data
+
+# Rename columns
+Renaming <- dplyr::rename(AC, Region = country, Beer = beer_servings, Spirit = spirit_servings, Wine = wine_servings, Total_Litres_of_Alcohol = total_litres_of_pure_alcohol)
+
+# Subset to have  fewer columns
+subsetting <- dplyr::select(Renaming, Region, Beer, Spirit, Wine)
+```
+
+```{r Characteristics of the data, echo=TRUE}
+# Section 4: Characteristics of the data
+
+# Display number of rows and columns in the Dataset
+cat("This dataframe has", nrow(subsetting), "rows and", ncol(subsetting), "columns.The names of the columns and a brief description of each are in the table below:")
+
+# Include a table
+AC_table <- data.frame(Column = colnames(subsetting), Description = c("Name of the Country", "TOtal number of Beers Sold ", "TOtal Litres of Spirit Sold", "Total Litres of Wine sold"))
+
+# Display the table
+knitr::kable(AC_table, format = "markdown")
+```
+
+```{r Summary, echo=TRUE}
+# Section 5: Summary statistics
+
+# Pick three columns for summary statistics
+summary_Statistics <- Renaming[, c("Region", "Beer", "Wine")]
+
+# Calculate summary statistics
+summaries <- summary(summary_Statistics, na.rm = TRUE)
+
+# Assign summary to a new object
+summary_newobject <- as.data.frame(summaries)
+
+# Display the summary table
+summary_newobject
+```
+
